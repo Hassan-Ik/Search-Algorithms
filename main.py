@@ -72,6 +72,7 @@ def main(width, height, grid_size, random_obstacles):
                     elif ALGORITHM == 'DFS':
                         path = depth_first_search(lambda: interface.draw(grid), grid, start, end)
                     elif ALGORITHM == 'BFS':
+                        print("Here")
                         path = breath_first_search(lambda: interface.draw(grid), grid, start, end)
                     elif ALGORITHM == 'UCS':
                         path = uniform_cost_search(lambda: interface.draw(grid), grid, start, end)

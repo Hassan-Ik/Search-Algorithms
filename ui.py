@@ -65,7 +65,7 @@ class UI:
         for i in range(rows):
             grid.append([])
             for j in range(rows):
-                node = Node(i, j, gap, rows, self.screen, self.grounds, self.robot_image[0], self.target_image[0], self.path_image[0], self.open_path_image, self.closed_path_image, '4n')
+                node = Node(i, j, gap, rows, self.screen, self.grounds, self.robot_image[0], self.target_image[0], self.path_image[0], self.open_path_image, self.closed_path_image, DIRECTIONS)
                 grid[i].append(node)
 
         return grid
@@ -162,40 +162,40 @@ class Node:
 
     def reset(self):
         self.color = WHITE
-
-    def make_start(self):
-        self.screen.blit(self.image, (self.x, self.y))
-        self.screen.blit(self.robot_image, (self.x, self.y))
-        self.is_start_node = True
-        
+    
     def make_closed(self):
-        # return
         self.screen.blit(self.image, (self.x, self.y))
-        self.screen.blit(self.open_path_image, (self.x, self.y))
+        pygame.time.delay(DELAY)
+        self.screen.blit(self.closed_path_image, (self.x, self.y))
+        pygame.display.flip()
 
 
     def make_open(self):
-        # return
-        self.screen.blit(self.image, (self.x, self.y))
-        self.screen.blit(self.closed_path_image, (self.x, self.y))
+        if not self.is_end_node and not self.is_start_node:
+            self.screen.blit(self.image, (self.x, self.y))
+            self.screen.blit(self.open_path_image, (self.x, self.y))
 
     def make_obstacle(self, obstacle_image_list):
         self.obstacle_image = random.choice(obstacle_image_list)
-        
+
+    def make_start(self):
+        self.is_start_node = True
+        self.screen.blit(self.image, (self.x, self.y))
+        self.screen.blit(self.robot_image, (self.x, self.y))
+            
     def make_end(self):
+        self.is_end_node = True
         self.screen.blit(self.image, (self.x, self.y))
         self.screen.blit(self.target_image, (self.x, self.y))
-        self.is_end_node = True
 
     def make_path(self):
-        if self.is_start_node:
-            self.make_start()
-        elif self.is_end_node:
-            self.make_end()
-        else:
+        pygame.time.delay(DELAY)
+        if not self.is_start_node and not self.is_end_node:
             self.screen.blit(self.image, (self.x, self.y))
             self.screen.blit(self.path_image, (self.x, self.y))
-            
+        
+        pygame.display.flip()
+
     def draw(self):
         self.screen.blit(self.image, (self.x, self.y))
         if self.obstacle_image is not None:

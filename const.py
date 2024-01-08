@@ -2,8 +2,8 @@
 # User Interface configuration
 WIDTH = 600
 HEIGHT = 600
-GRID_SIZE = 16
-RANDOM_OBSTACLES = 20
+GRID_SIZE = 20
+RANDOM_OBSTACLES = 50
 FPS = 30
 
 
@@ -22,10 +22,13 @@ CLOSED_PATH_IMAGE = 'assets/sprites/map/bush/grass_1.png'
 # BFS
 # DFS
 
-ALGORITHM = 'UCS'
+ALGORITHM = 'DFS'
 
 # Either 4 dimentional or 8 dimensional
-DIRECTIONS = '4n' 
+DIRECTIONS = '8n' 
 
 ACTION_STEP = 3
 RADIUS = 1
+
+# Delay in visualization
+DELAY = 100

@@ -1,6 +1,6 @@
 from collections import deque
 
-def breath_first_search(draw, grid, start, end):
+def breath_first_search(interface, grid, start, end):
     queue = deque([start])
     came_from = {}
     while queue:
@@ -8,7 +8,7 @@ def breath_first_search(draw, grid, start, end):
         if current == end:
             while current != start:
                 current = came_from[current]
-                current.make_path()
+                interface.make_path(current)
                 
             return True
         
@@ -16,11 +16,9 @@ def breath_first_search(draw, grid, start, end):
             if neighbor not in came_from:
                 queue.append(neighbor)
                 came_from[neighbor] = current
-                neighbor.make_open()
+                interface.make_open(neighbor)
         
-        # draw()
-
         if current != start:
-            current.make_closed()
+            interface.make_closed(current)
     print("Length of Search:", len(came_from))
     return False

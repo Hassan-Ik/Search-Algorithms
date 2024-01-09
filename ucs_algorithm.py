@@ -1,6 +1,6 @@
 from queue import PriorityQueue
 
-def uniform_cost_search(draw, grid, start, end):
+def uniform_cost_search(interface, grid, start, end):
         queue = PriorityQueue()
         count = 0
         queue.put((0, count, start))
@@ -13,7 +13,8 @@ def uniform_cost_search(draw, grid, start, end):
             if current == end:
                 while current in came_from:
                     current = came_from[current]
-                    current.make_path()
+                    interface.make_path(current)
+                print("Total cost took for ")
                 return True
             
             for neighbor in current.neighbors:
@@ -24,11 +25,9 @@ def uniform_cost_search(draw, grid, start, end):
                     priority = new_cost
                     queue.put((priority, count, neighbor))
                     came_from[neighbor] = current
-                
-                # draw()
+                    interface.make_open(neighbor)
 
             if current != start:
-                pass
-                # current.make_closed()
+                interface.make_closed(current)
                 
         return False

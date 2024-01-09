@@ -20,10 +20,10 @@ def main(width, height, grid_size, random_obstacles):
     goal_node = None
 
     run = True
-
+    # Drawing static interface
+    interface.draw(grid)
+    
     while run:
-        if start_node is None and goal_node is None:
-            interface.draw(grid)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -32,13 +32,13 @@ def main(width, height, grid_size, random_obstacles):
                 pos = pygame.mouse.get_pos()
                 row, col = interface.get_clicked_pos(pos, grid_size, width)
                 node = grid[row][col]
-                if not start_node and node != goal_node and node.is_obstacle() == False:
+                if not start_node and node != goal_node and node.is_obstacle == False:
                     start_node = node
-                    interface.make_start_pos(node)
+                    interface.make_start(node)
                     
-                elif not goal_node and node != start_node and node.is_obstacle() == False:
+                elif not goal_node and node != start_node and node.is_obstacle == False:
                     goal_node = node
-                    interface.make_goal_pos(node)
+                    interface.make_goal(node)
                 else:
                     pass
 
@@ -68,14 +68,14 @@ def main(width, height, grid_size, random_obstacles):
                     
                     
                     if ALGORITHM == 'A*':
-                        path = astar_search(lambda: interface.draw(grid), grid, start_node, goal_node)
+                        path = astar_search(interface, grid, start_node, goal_node)
                     elif ALGORITHM == 'DFS':
-                        path = depth_first_search(lambda: interface.draw(grid), grid, start_node, goal_node)
+                        path = depth_first_search(interface, grid, start_node, goal_node)
                     elif ALGORITHM == 'BFS':
                         print("Here")
-                        path = breath_first_search(lambda: interface.draw(grid), grid, start_node, goal_node)
+                        path = breath_first_search(interface, grid, start_node, goal_node)
                     elif ALGORITHM == 'UCS':
-                        path = uniform_cost_search(lambda: interface.draw(grid), grid, start_node, goal_node)
+                        path = uniform_cost_search(interface, grid, start_node, goal_node)
                     else:
                         raise Exception("Wrong Algorithm name")
                     
@@ -90,13 +90,14 @@ def main(width, height, grid_size, random_obstacles):
                     tracemalloc.stop()
                 
                 if event.key == pygame.K_c:
-                    start_node_node = None
+                    start_node = None
                     goal_node = None
                     grid = interface.make_grid(grid_size, width)
                     interface.make_random_obstacles(grid, random_obstacles)
+                    interface.draw(grid)
             
         # Update the display
-        pygame.display.update()
+        pygame.display.flip()
 
         # Control the frame rate
         pygame.time.Clock().tick(30)

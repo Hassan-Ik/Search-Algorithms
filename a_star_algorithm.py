@@ -24,7 +24,7 @@ def manhattan_heuristics(p1, p2):
     return math.fabs(x1 - x2) + math.fabs(y1 - y2)
 
 
-def astar_search(draw, grid, start, end):
+def astar_search(interface, grid, start, end):
     count = 0
     
     open_set = PriorityQueue()
@@ -49,7 +49,7 @@ def astar_search(draw, grid, start, end):
         if current == end:
             while current in visited:
                 current = visited[current]
-                current.make_path()
+                interface.make_path(current)
             return True
 
         for neighbor in current.neighbors:
@@ -63,11 +63,9 @@ def astar_search(draw, grid, start, end):
                     count += 1
                     open_set.put((f_score[neighbor], count, neighbor))
                     open_set_hash.add(neighbor)
-                    neighbor.make_open()
-
-        # draw()
+                    interface.make_open(neighbor)
 
         if current != start:
-            current.make_closed()
+            interface.make_closed(current)
 
     return False

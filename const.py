@@ -2,9 +2,9 @@
 # User Interface configuration
 WIDTH = 600
 HEIGHT = 600
-GRID_SIZE = 10
-RANDOM_OBSTACLES = 10
-FPS = 60
+GRID_SIZE = 30
+RANDOM_OBSTACLES = 50
+FPS = 30
 
 
 # Images Paths for ground, obstacle, robot, target, real path etc.
@@ -22,10 +22,10 @@ CLOSED_PATH_IMAGE = 'assets/sprites/map/bush/grass_1.png'
 # BFS
 # DFS
 
-ALGORITHM = 'A*'
+ALGORITHM = 'BFS'
 
 # Either 4 dimentional or 8 dimensional
-DIRECTIONS = '8n' 
+DIRECTIONS = '4n' 
 
 ACTION_STEP = 3
 RADIUS = 1

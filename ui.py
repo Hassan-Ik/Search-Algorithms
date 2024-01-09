@@ -38,9 +38,9 @@ class UI:
 
         self.grounds = self.assets_loading_and_scaling(self.ground_images_list)
         self.obstacles = self.assets_loading_and_scaling(self.obstacles_images_list)
-        self.robot_image = self.assets_loading_and_scaling([self.robot_image])
-        self.target_image = self.assets_loading_and_scaling([self.target_image])
-        self.path_image = self.assets_loading_and_scaling([self.path_image])
+        self.robot_image = self.assets_loading_and_scaling([self.robot_image])[0]
+        self.target_image = self.assets_loading_and_scaling([self.target_image])[0]
+        self.path_image = self.assets_loading_and_scaling([self.path_image])[0]
         self.open_path_image = self.assets_loading_and_scaling([self.open_path_image])[0]
         self.closed_path_image = self.assets_loading_and_scaling([self.closed_path_image])[0]
 
@@ -68,7 +68,7 @@ class UI:
         for i in range(rows):
             grid.append([])
             for j in range(rows):
-                node = Node(i, j, gap, rows, self.screen, self.grounds, self.robot_image[0], self.target_image[0], self.path_image[0], self.open_path_image, self.closed_path_image, DIRECTIONS)
+                node = Node(i, j, gap, rows, DIRECTIONS)
                 grid[i].append(node)
 
         return grid
@@ -86,7 +86,9 @@ class UI:
 
         for row in grid:
             for node in row:
-                node.draw()
+                self.screen.blit(random.choice(self.grounds), (node.x, node.y))
+                if node.is_obstacle:
+                    self.screen.blit(random.choice(self.obstacles), (node.x, node.y))
 
         # self.draw_grid(GRID_SIZE, GRID_SIZE)
 
@@ -99,11 +101,34 @@ class UI:
 
         return row, col
 
-    def make_start_pos(self, node):
-        node.make_start()
-    
-    def make_goal_pos(self, node):
-        node.make_end()
+    def make_closed(self, node):
+        self.screen.blit(random.choice(self.grounds), (node.x, node.y))
+        pygame.time.delay(DELAY)
+        self.screen.blit(self.closed_path_image, (node.x, node.y))
+        pygame.display.flip()
+
+    def make_open(self, node):
+        if not node.is_goal_node and not node.is_start_node:
+            self.screen.blit(random.choice(self.grounds), (node.x, node.y))
+            self.screen.blit(self.open_path_image, (node.x, node.y))
+
+    def make_start(self, node):
+        node.is_start_node = True
+        self.screen.blit(random.choice(self.grounds), (node.x, node.y))
+        self.screen.blit(self.robot_image, (node.x, node.y))
+            
+    def make_goal(self, node):
+        node.is_goal_node = True
+        self.screen.blit(random.choice(self.grounds), (node.x, node.y))
+        self.screen.blit(self.target_image, (node.x, node.y))
+
+    def make_path(self, node):
+        pygame.time.delay(DELAY)
+        if not node.is_start_node and not node.is_goal_node:
+            self.screen.blit(random.choice(self.grounds), (node.x, node.y))
+            self.screen.blit(self.path_image, (node.x, node.y))
+        
+        pygame.display.flip()
 
     def make_random_obstacles(self, grid, n):
         obstacels_created = 0
@@ -111,111 +136,57 @@ class UI:
             row = random.randint(0, len(grid) - 1) 
             col = random.randint(0, len(grid[0]) - 1)
             node = grid[row][col]
-            if not (node.is_start_node or node.is_end_node):
-                node.make_obstacle(self.obstacles)
+            if not (node.is_start_node or node.is_goal_node):
+                node.is_obstacle = True
                 obstacels_created += 1
 
 class Node:
-    def __init__(self, row, col, width, total_rows, screen, ground_list, robot_image, target_image, path_image, open_path_image, closed_path_image, motion: str = '4n'):
+    def __init__(self, row, col, width, total_rows, motion: str = '4n'):
         self.row = row
         self.col = col
         self.x = row * width
         self.y = col * width
-        self.color = WHITE
-        
-        self.screen = screen
 
-        self.obstacle_image = None
         self.motion = motion
-
-        self.path_image = path_image
-        self.target_image = target_image
-        self.robot_image = robot_image
-
-        self.open_path_image = open_path_image
-        self.closed_path_image = closed_path_image
-
-        if ground_list != []:
-            self.image = random.choice(ground_list)
 
         self.neighbors = []
         self.width = width
         self.total_rows = total_rows
-
+        
+        self.is_obstacle = False
         self.is_start_node = False
-        self.is_end_node = False
+        self.is_goal_node = False
 
     def get_pos(self):
         return self.row, self.col
 
-    def is_obstacle(self):
-        return self.obstacle_image != None
-
-    def make_closed(self):
-        self.screen.blit(self.image, (self.x, self.y))
-        pygame.time.delay(DELAY)
-        self.screen.blit(self.closed_path_image, (self.x, self.y))
-        pygame.display.flip()
-
-
-    def make_open(self):
-        if not self.is_end_node and not self.is_start_node:
-            self.screen.blit(self.image, (self.x, self.y))
-            self.screen.blit(self.open_path_image, (self.x, self.y))
-
-    def make_obstacle(self, obstacle_image_list):
-        self.obstacle_image = random.choice(obstacle_image_list)
-
-    def make_start(self):
-        self.is_start_node = True
-        self.screen.blit(self.image, (self.x, self.y))
-        self.screen.blit(self.robot_image, (self.x, self.y))
-            
-    def make_end(self):
-        self.is_end_node = True
-        self.screen.blit(self.image, (self.x, self.y))
-        self.screen.blit(self.target_image, (self.x, self.y))
-
-    def make_path(self):
-        pygame.time.delay(DELAY)
-        if not self.is_start_node and not self.is_end_node:
-            self.screen.blit(self.image, (self.x, self.y))
-            self.screen.blit(self.path_image, (self.x, self.y))
-        
-        pygame.display.flip()
-
-    def draw(self):
-        self.screen.blit(self.image, (self.x, self.y))
-        if self.obstacle_image is not None:
-            self.screen.blit(self.obstacle_image, (self.x, self.y))
-        
     def update_neighbors(self, grid):
         self.neighbors = []
 
-        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_obstacle(): # DOWN
+        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_obstacle: # DOWN
             self.neighbors.append(grid[self.row + 1][self.col])
 
-        if self.row > 0 and not grid[self.row - 1][self.col].is_obstacle(): # UP
+        if self.row > 0 and not grid[self.row - 1][self.col].is_obstacle: # UP
             self.neighbors.append(grid[self.row - 1][self.col])
 
-        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_obstacle(): # RIGHT
+        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_obstacle: # RIGHT
             self.neighbors.append(grid[self.row][self.col + 1])
 
-        if self.col > 0 and not grid[self.row][self.col - 1].is_obstacle(): # LEFT
+        if self.col > 0 and not grid[self.row][self.col - 1].is_obstacle: # LEFT
             self.neighbors.append(grid[self.row][self.col - 1])
 
         if self.motion == '8n':
             # Diagonal motions
-            if self.row < self.total_rows - 1 and self.col < self.total_rows - 1 and not grid[self.row + 1][self.col + 1].is_obstacle():
+            if self.row < self.total_rows - 1 and self.col < self.total_rows - 1 and not grid[self.row + 1][self.col + 1].is_obstacle:
                 self.neighbors.append(grid[self.row + 1][self.col + 1])
 
-            if self.row > 0 and self.col > 0 and not grid[self.row - 1][self.col - 1].is_obstacle():
+            if self.row > 0 and self.col > 0 and not grid[self.row - 1][self.col - 1].is_obstacle:
                 self.neighbors.append(grid[self.row - 1][self.col - 1])
 
-            if self.row < self.total_rows - 1 and self.col > 0 and not grid[self.row + 1][self.col - 1].is_obstacle():
+            if self.row < self.total_rows - 1 and self.col > 0 and not grid[self.row + 1][self.col - 1].is_obstacle:
                 self.neighbors.append(grid[self.row + 1][self.col - 1])
 
-            if self.row > 0 and self.col < self.total_rows - 1 and not grid[self.row - 1][self.col + 1].is_obstacle():
+            if self.row > 0 and self.col < self.total_rows - 1 and not grid[self.row - 1][self.col + 1].is_obstacle:
                 self.neighbors.append(grid[self.row - 1][self.col + 1])
         
     def __lt__(self, other):

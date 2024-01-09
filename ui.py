@@ -102,7 +102,7 @@ class UI:
     def make_start_pos(self, node):
         node.make_start()
     
-    def make_end_pos(self, node):
+    def make_goal_pos(self, node):
         node.make_end()
 
     def make_random_obstacles(self, grid, n):
@@ -111,7 +111,7 @@ class UI:
             row = random.randint(0, len(grid) - 1) 
             col = random.randint(0, len(grid[0]) - 1)
             node = grid[row][col]
-            if not (node.is_start() or node.is_end()):
+            if not (node.is_start_node or node.is_end_node):
                 node.make_obstacle(self.obstacles)
                 obstacels_created += 1
 

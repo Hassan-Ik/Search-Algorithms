@@ -20,7 +20,9 @@ class UI:
         self.width = width
         self.height = height
         self.grid_size = grid_size
-
+        print(width)
+        print(height)
+        print(grid_size)
         pygame.init()
 
         # Set time the screen updates (for FPS)
@@ -51,7 +53,8 @@ class UI:
         scale_images_list = []
         img_width = self.width // self.grid_size
         img_height = self.height // self.grid_size
-
+        # print(img_width)
+        # print(img_height)
         for img in image_load:
             # Scale the image
             scale_image = pygame.transform.scale(img, (img_width, img_height))
@@ -85,7 +88,7 @@ class UI:
             for node in row:
                 node.draw()
 
-        self.draw_grid(GRID_SIZE, GRID_SIZE)
+        # self.draw_grid(GRID_SIZE, GRID_SIZE)
 
     def get_clicked_pos(self, pos, rows, width):
         gap = width // rows
@@ -145,24 +148,9 @@ class Node:
     def get_pos(self):
         return self.row, self.col
 
-    def is_closed(self):
-        return self.color == RED
-
-    def is_open(self):
-        return self.color == GREEN
-
     def is_obstacle(self):
         return self.obstacle_image != None
 
-    def is_start(self):
-        return self.color == BLUE
-
-    def is_end(self):
-        return self.color == TURQUOISE
-
-    def reset(self):
-        self.color = WHITE
-    
     def make_closed(self):
         self.screen.blit(self.image, (self.x, self.y))
         pygame.time.delay(DELAY)

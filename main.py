@@ -84,9 +84,7 @@ def main(width, height, grid_size, random_obstacles):
                         print("Total Path from start node to goal node ", path)
                         print("Nodes and their co-ordinates values are:")
                         for node in path:
-                            print("Node row no: ", node.row)
-                            print("Node col no: ", node.col)
-                            
+                            print("Node Position: ", (node.row, node.col))
                         print("Total cost required for path finding: ", cost)
 
 

@@ -22,9 +22,9 @@ CLOSED_PATH_IMAGE = 'assets/sprites/map/bush/grass_1.png'
 # BFS
 # DFS
 
-ALGORITHM = 'UCS'
+ALGORITHM = 'A*'
 
-SEARCH_TYPE = 'tree'
+SEARCH_TYPE = 'graph'
 
 # Either 4 dimentional or 8 dimensional
 DIRECTIONS = '4n' 

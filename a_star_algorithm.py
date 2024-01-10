@@ -54,22 +54,22 @@ def astar_search(interface, grid, start, goal, type='graph'):
             if type == 'tree':
                 while current:
                      path.append(current)
-                     current = current.parent
+                     current = came_from[current]
             else:
                 while current in came_from:
                     path.append(current)
                     current = came_from[current]
-            
+            print(path)
             path.reverse()
             for node in path:
                 interface.make_path(node)
-            return path, g_score[end]
+            return path, g_score[goal]
 
         for neighbor in current.neighbors:
             temp_g_score = g_score[current] + 1
 
             if temp_g_score < g_score[neighbor]:
-                if type == 'tree' and current in came_from:
+                if type == 'tree' and neighbor in came_from:
                     continue
 
                 came_from[neighbor] = current

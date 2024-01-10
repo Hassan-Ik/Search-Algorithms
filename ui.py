@@ -19,11 +19,11 @@ class Node:
         """
         self.row = row
         self.col = col
-        self.x = row
-        self.y = col
-        
-        # self.x = row * width
-        # self.y = col * width
+        # self.x = row
+        # self.y = col
+
+        self.x = row * width
+        self.y = col * width
 
         self.motion = motion
 

@@ -1,19 +1,58 @@
 import pygame
 import random
-import sys
-import numpy as np
 from const import *
 
-RED = (255, 0, 0)
-GREEN = (0, 255, 0) 
-BLUE = (0, 255, 0)
-YELLOW = (255, 255, 0)
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-PURPLE = (128, 0, 128)
-ORANGE = (255, 165 ,0)
-GREY = (128, 128, 128)
-TURQUOISE = (64, 224, 208)
+class Node:
+    def __init__(self, row, col, width, total_rows, motion: str = '4n'):
+        self.row = row
+        self.col = col
+        self.x = row * width
+        self.y = col * width
+
+        self.motion = motion
+
+        self.neighbors = []
+        self.width = width
+        self.total_rows = total_rows
+        
+        self.is_obstacle = False
+        self.is_start_node = False
+        self.is_goal_node = False
+
+    def get_pos(self):
+        return self.row, self.col
+
+    def update_neighbors(self, grid):
+        self.neighbors = []
+
+        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_obstacle: # DOWN
+            self.neighbors.append(grid[self.row + 1][self.col])
+
+        if self.row > 0 and not grid[self.row - 1][self.col].is_obstacle: # UP
+            self.neighbors.append(grid[self.row - 1][self.col])
+
+        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_obstacle: # RIGHT
+            self.neighbors.append(grid[self.row][self.col + 1])
+
+        if self.col > 0 and not grid[self.row][self.col - 1].is_obstacle: # LEFT
+            self.neighbors.append(grid[self.row][self.col - 1])
+
+        if self.motion == '8n':
+            # Diagonal motions
+            if self.row < self.total_rows - 1 and self.col < self.total_rows - 1 and not grid[self.row + 1][self.col + 1].is_obstacle:
+                self.neighbors.append(grid[self.row + 1][self.col + 1])
+
+            if self.row > 0 and self.col > 0 and not grid[self.row - 1][self.col - 1].is_obstacle:
+                self.neighbors.append(grid[self.row - 1][self.col - 1])
+
+            if self.row < self.total_rows - 1 and self.col > 0 and not grid[self.row + 1][self.col - 1].is_obstacle:
+                self.neighbors.append(grid[self.row + 1][self.col - 1])
+
+            if self.row > 0 and self.col < self.total_rows - 1 and not grid[self.row - 1][self.col + 1].is_obstacle:
+                self.neighbors.append(grid[self.row - 1][self.col + 1])
+        
+    def __lt__(self, other):
+        return False
 
 class UI:
     def __init__(self, width, height, grid_size=10):
@@ -139,55 +178,3 @@ class UI:
             if not (node.is_start_node or node.is_goal_node):
                 node.is_obstacle = True
                 obstacels_created += 1
-
-class Node:
-    def __init__(self, row, col, width, total_rows, motion: str = '4n'):
-        self.row = row
-        self.col = col
-        self.x = row * width
-        self.y = col * width
-
-        self.motion = motion
-
-        self.neighbors = []
-        self.width = width
-        self.total_rows = total_rows
-        
-        self.is_obstacle = False
-        self.is_start_node = False
-        self.is_goal_node = False
-
-    def get_pos(self):
-        return self.row, self.col
-
-    def update_neighbors(self, grid):
-        self.neighbors = []
-
-        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_obstacle: # DOWN
-            self.neighbors.append(grid[self.row + 1][self.col])
-
-        if self.row > 0 and not grid[self.row - 1][self.col].is_obstacle: # UP
-            self.neighbors.append(grid[self.row - 1][self.col])
-
-        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_obstacle: # RIGHT
-            self.neighbors.append(grid[self.row][self.col + 1])
-
-        if self.col > 0 and not grid[self.row][self.col - 1].is_obstacle: # LEFT
-            self.neighbors.append(grid[self.row][self.col - 1])
-
-        if self.motion == '8n':
-            # Diagonal motions
-            if self.row < self.total_rows - 1 and self.col < self.total_rows - 1 and not grid[self.row + 1][self.col + 1].is_obstacle:
-                self.neighbors.append(grid[self.row + 1][self.col + 1])
-
-            if self.row > 0 and self.col > 0 and not grid[self.row - 1][self.col - 1].is_obstacle:
-                self.neighbors.append(grid[self.row - 1][self.col - 1])
-
-            if self.row < self.total_rows - 1 and self.col > 0 and not grid[self.row + 1][self.col - 1].is_obstacle:
-                self.neighbors.append(grid[self.row + 1][self.col - 1])
-
-            if self.row > 0 and self.col < self.total_rows - 1 and not grid[self.row - 1][self.col + 1].is_obstacle:
-                self.neighbors.append(grid[self.row - 1][self.col + 1])
-        
-    def __lt__(self, other):
-        return False

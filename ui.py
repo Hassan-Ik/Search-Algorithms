@@ -133,8 +133,6 @@ class UI:
 
 
     def draw(self, grid):
-        self.screen.fill(WHITE)
-
         for row in grid:
             for node in row:
                 self.screen.blit(random.choice(self.grounds), (node.x, node.y))

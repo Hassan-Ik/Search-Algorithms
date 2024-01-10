@@ -19,8 +19,11 @@ class Node:
         """
         self.row = row
         self.col = col
-        self.x = row * width
-        self.y = col * width
+        self.x = row
+        self.y = col
+        
+        # self.x = row * width
+        # self.y = col * width
 
         self.motion = motion
 
@@ -87,31 +90,23 @@ class UI:
         self.open_path_image = OPEN_PATH_IMAGE
         self.closed_path_image = CLOSED_PATH_IMAGE
 
-        self.grounds = self.assets_loading_and_scaling(self.ground_images_list)
-        self.obstacles = self.assets_loading_and_scaling(self.obstacles_images_list)
-        self.robot_image = self.assets_loading_and_scaling([self.robot_image])[0]
-        self.target_image = self.assets_loading_and_scaling([self.target_image])[0]
-        self.path_image = self.assets_loading_and_scaling([self.path_image])[0]
-        self.open_path_image = self.assets_loading_and_scaling([self.open_path_image])[0]
-        self.closed_path_image = self.assets_loading_and_scaling([self.closed_path_image])[0]
+        self.grounds = [self.loading_and_rescaling_asset(ground_image) for ground_image in self.ground_images_list]
+        self.obstacles = [self.loading_and_rescaling_asset(obstacle_image) for obstacle_image in self.obstacles_images_list]
+        self.robot_image = self.loading_and_rescaling_asset(self.robot_image)
+        self.target_image = self.loading_and_rescaling_asset(self.target_image)
+        self.path_image = self.loading_and_rescaling_asset(self.path_image)
+        self.open_path_image = self.loading_and_rescaling_asset(self.open_path_image)
+        self.closed_path_image = self.loading_and_rescaling_asset(self.closed_path_image)
 
         self.screen = pygame.display.set_mode((self.width, self.height))
 
-    # Method for loading and scaling the assets into pygame
-    def assets_loading_and_scaling(self, path_list):
+    def loading_and_rescaling_asset(self, image_path):
         # Load the images
-        image_load = [pygame.image.load(path) for path in path_list]
-        scale_images_list = []
+        image = pygame.image.load(image_path)
         img_width = self.width // self.grid_size
         img_height = self.height // self.grid_size
-        # print(img_width)
-        # print(img_height)
-        for img in image_load:
-            # Scale the image
-            scale_image = pygame.transform.scale(img, (img_width, img_height))
-            scale_images_list.append(scale_image)
-
-        return scale_images_list
+        scale_image = pygame.transform.scale(image, (img_width, img_height))
+        return scale_image
     
     def make_grid(self, rows, width):
         grid = []

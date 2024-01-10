@@ -1,24 +1,38 @@
 from collections import deque
 
-def depth_first_search(interface, grid, start, end):
-    queue = deque([start]) 
+def depth_first_search(interface, start, goal, type = 'graph'):
+    stack = [start] 
     came_from = {}
     
-    while queue:
-        current = queue.pop()
-        if current == end:
+    if type == 'tree':
+        print("Here")
+        came_from = {start: None}
+
+    while stack:
+        current = stack.pop()
+        if current == goal:
+            path = []
+            cost = 0
             while current != start:
+                path.append(current)
+                cost += 1
                 current = came_from[current]
-                interface.make_path(current)
-            return True
+            path.reverse()
+            
+            for node in path:
+                interface.make_path(node)
+            return path, cost
         
         for neighbor in current.neighbors:
+            if type == 'tree' and neighbor in came_from:
+                continue
+                
             if neighbor not in came_from:
-                queue.append(neighbor)
+                stack.append(neighbor)
                 came_from[neighbor] = current
                 interface.make_open(neighbor)
             
         if current != start:
             interface.make_closed(current)  
 
-    return False
+    return False, None

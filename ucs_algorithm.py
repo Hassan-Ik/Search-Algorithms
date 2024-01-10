@@ -1,24 +1,44 @@
 from queue import PriorityQueue
 
-def uniform_cost_search(interface, grid, start, end):
+def uniform_cost_search(interface, start, goal, type = 'graph'):
         queue = PriorityQueue()
         count = 0
+        
         queue.put((0, count, start))
         came_from = {}
+        
+        if type == 'tree':
+             came_from = {start: None}
+
         cost_so_far = {}
         cost_so_far[start] = 0
         
         while not queue.empty():
             current = queue.get()[2]
-            if current == end:
-                while current in came_from:
-                    current = came_from[current]
-                    interface.make_path(current)
-                print("Total cost took for ")
-                return True
+            if current == goal:
+                path = []
+                if type == 'tree':
+                    while current:
+                        path.append(current)
+                        current = current.parent
+                else:
+                    while current in came_from:
+                        path.append(current)
+                        current = came_from[current]
+                
+                path.reverse()
+                for node in path:
+                    interface.make_path(node)
+                
+                cost = cost_so_far[path[-1]] 
+                
+                return path, cost
             
             for neighbor in current.neighbors:
                 new_cost = cost_so_far[current] + 1
+                
+                if type == 'tree' and neighbor in came_from:
+                     continue
                 
                 if neighbor not in cost_so_far or new_cost < cost_so_far[neighbor]:
                     cost_so_far[neighbor] = new_cost
@@ -30,4 +50,4 @@ def uniform_cost_search(interface, grid, start, end):
             if current != start:
                 interface.make_closed(current)
                 
-        return False
+        return False, None

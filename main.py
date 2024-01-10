@@ -68,19 +68,27 @@ def main(width, height, grid_size, random_obstacles):
                     
                     
                     if ALGORITHM == 'A*':
-                        path = astar_search(interface, grid, start_node, goal_node)
+                        path, cost = astar_search(interface, grid, start_node, goal_node, SEARCH_TYPE)
                     elif ALGORITHM == 'DFS':
-                        path = depth_first_search(interface, grid, start_node, goal_node)
+                        path, cost = depth_first_search(interface, start_node, goal_node, SEARCH_TYPE)
                     elif ALGORITHM == 'BFS':
-                        print("Here")
-                        path = breath_first_search(interface, grid, start_node, goal_node)
+                        path, cost = breath_first_search(interface, start_node, goal_node, SEARCH_TYPE)
                     elif ALGORITHM == 'UCS':
-                        path = uniform_cost_search(interface, grid, start_node, goal_node)
+                        path, cost = uniform_cost_search(interface, start_node, goal_node)
                     else:
                         raise Exception("Wrong Algorithm name")
                     
                     if path is False:
                         print("Unable to find path to the desired node.")
+                    else:
+                        print("Total Path from start node to goal node ", path)
+                        print("Nodes and their co-ordinates values are:")
+                        for node in path:
+                            print("Node X axis: ", node.row)
+                            print("Node y axis: ", node.col)
+                        print("Total cost required for path finding: ", cost)
+
+
                     ending_time = time.time()
                     print(f"{ALGORITHM} Search Algorithm ending time: ", ending_time)
                     print("Total Time Used by algorithm: ", ending_time - starting_time)

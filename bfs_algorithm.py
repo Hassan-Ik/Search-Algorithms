@@ -1,18 +1,30 @@
 from collections import deque
 
-def breath_first_search(interface, grid, start, end):
+def breath_first_search(interface, start, goal, type='graph'):
     queue = deque([start])
     came_from = {}
+    
     while queue:
         current = queue.popleft()
-        if current == end:
+        
+        if current == goal:
+            path = []
+            cost = 0
             while current != start:
+                path.append(current)
+                cost += 1 
                 current = came_from[current]
-                interface.make_path(current)
                 
-            return True
+            path.reverse()
+            
+            for node in path:
+                interface.make_path(node)
+            return path, cost
         
         for neighbor in current.neighbors:
+            if type == 'tree' and neighbor in came_from:
+                continue
+            
             if neighbor not in came_from:
                 queue.append(neighbor)
                 came_from[neighbor] = current
@@ -20,5 +32,6 @@ def breath_first_search(interface, grid, start, end):
         
         if current != start:
             interface.make_closed(current)
+
     print("Length of Search:", len(came_from))
-    return False
+    return False, None

@@ -5,7 +5,6 @@ def depth_first_search(interface, start, goal, type = 'graph'):
     came_from = {}
     
     if type == 'tree':
-        print("Here")
         came_from = {start: None}
 
     while stack:

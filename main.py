@@ -1,5 +1,5 @@
 import pygame
-from ui import UI
+from ui import UI, Node
 from const import *
 import tracemalloc
 import time
@@ -11,18 +11,22 @@ from bfs_algorithm import breath_first_search
 from dfs_algorithm import depth_first_search
 from ucs_algorithm import uniform_cost_search
 
-def main(width, height, grid_size, random_obstacles):
+def main(width, height, grid_size, no_of_obstacles, start_node = None, goal_node = None, algorithm: str = 'A*', search_type: str = 'graphics'):
     interface = UI(width, height, grid_size)
     grid = interface.make_grid(grid_size, width)
-    interface.make_random_obstacles(grid, random_obstacles)
-
-    start_node = None
-    goal_node = None
-
+    interface.make_random_obstacles(grid, no_of_obstacles)
+    
     run = True
     # Drawing static interface
     interface.draw(grid)
     
+    if start_node is not None:
+        start_node = grid[start_node[0]][start_node[1]]
+        interface.make_start(start_node)
+    if goal_node is not None:
+        goal_node = grid[goal_node[0]][goal_node[1]]
+        interface.make_goal(goal_node)
+        
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -35,7 +39,6 @@ def main(width, height, grid_size, random_obstacles):
                 if not start_node and node != goal_node and node.is_obstacle == False:
                     start_node = node
                     interface.make_start(node)
-                    
                 elif not goal_node and node != start_node and node.is_obstacle == False:
                     goal_node = node
                     interface.make_goal(node)
@@ -62,18 +65,18 @@ def main(width, height, grid_size, random_obstacles):
                     
                     tracemalloc.start()
                     print("Starting Search Algorithms Path Finding")
-                    print(f"Using {ALGORITHM}!")
+                    print(f"Using {algorithm}!")
                     starting_time = time.time()
                     print("Algorithm Starting Time: ", starting_time)
                     
                     
-                    if ALGORITHM == 'A*':
-                        path, cost = astar_search(interface, grid, start_node, goal_node, SEARCH_TYPE)
-                    elif ALGORITHM == 'DFS':
-                        path, cost = depth_first_search(interface, start_node, goal_node, SEARCH_TYPE)
-                    elif ALGORITHM == 'BFS':
-                        path, cost = breath_first_search(interface, start_node, goal_node, SEARCH_TYPE)
-                    elif ALGORITHM == 'UCS':
+                    if algorithm == 'A*':
+                        path, cost = astar_search(interface, grid, start_node, goal_node, search_type)
+                    elif algorithm == 'DFS':
+                        path, cost = depth_first_search(interface, start_node, goal_node, search_type)
+                    elif algorithm == 'BFS':
+                        path, cost = breath_first_search(interface, start_node, goal_node, search_type)
+                    elif algorithm == 'UCS':
                         path, cost = uniform_cost_search(interface, start_node, goal_node)
                     else:
                         raise Exception("Wrong Algorithm name")
@@ -89,18 +92,18 @@ def main(width, height, grid_size, random_obstacles):
 
 
                     ending_time = time.time()
-                    print(f"{ALGORITHM} Search Algorithm ending time: ", ending_time)
+                    print(f"{algorithm} Search Algorithm ending time: ", ending_time)
                     print("Total Time Used by algorithm: ", ending_time - starting_time)
                     
                     current_usage, peak_usage = tracemalloc.get_traced_memory()
                     print(f"Current memory usage for search algorithm is {current_usage / 10**6} MB; Peak was {peak_usage / 10**6} MB")
                     tracemalloc.stop()
-                
+                    
                 if event.key == pygame.K_c:
                     start_node = None
                     goal_node = None
                     grid = interface.make_grid(grid_size, width)
-                    interface.make_random_obstacles(grid, random_obstacles)
+                    interface.make_random_obstacles(grid, no_of_obstacles)
                     interface.draw(grid)
             
         # Update the display
@@ -113,4 +116,5 @@ def main(width, height, grid_size, random_obstacles):
     pygame.quit()
 
 if __name__ == '__main__':
-    main(WIDTH, HEIGHT, GRID_SIZE, RANDOM_OBSTACLES)
+    main(WIDTH, HEIGHT, GRID_SIZE, NO_OF_OBSTACLES, None, None, ALGORITHM, SEARCH_TYPE)
+    

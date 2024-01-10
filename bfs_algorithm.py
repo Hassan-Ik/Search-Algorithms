@@ -3,7 +3,9 @@ from collections import deque
 def breath_first_search(interface, start, goal, type='graph'):
     queue = deque([start])
     came_from = {}
-    
+    if type == 'tree':
+        came_from = {start: None}
+        
     while queue:
         current = queue.popleft()
         

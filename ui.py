@@ -175,11 +175,19 @@ class UI:
         pygame.display.flip()
 
     def make_random_obstacles(self, grid, n):
-        obstacels_created = 0
-        while obstacels_created <= n:
+        obstacles_created = 0
+        while obstacles_created <= n:
             row = random.randint(0, len(grid) - 1) 
             col = random.randint(0, len(grid[0]) - 1)
             node = grid[row][col]
             if not (node.is_start_node or node.is_goal_node):
                 node.is_obstacle = True
-                obstacels_created += 1
+                obstacles_created += 1
+    
+    def make_default_obstacles(self, grid, obstacles_combination):
+        obstacles_created = 0
+        for combination in obstacles_combination:
+            node = grid[combination[0]][combination[1]]
+            if not (node.is_start_node or node.is_goal_node):
+                node.is_obstacle = True
+                obstacles_created += 1

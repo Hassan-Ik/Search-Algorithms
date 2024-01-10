@@ -2,8 +2,21 @@ import pygame
 import random
 from const import *
 
+
+GREY = (169,169,169)
+# Defining Node class to represent an element in the graph or tree
 class Node:
     def __init__(self, row, col, width, total_rows, motion: str = '4n'):
+        """
+        Initializing Node on creation
+
+        Args:
+            row (int): Number of rows
+            col (int): Number of columns
+            width (float): Width of the Screen
+            total_rows (int): Total Number of rows in the grid of screen
+            motion (str, optional): Deciding if the graph can move in four directions or on 8 directions including diagonal sides. Defaults to '4n'.
+        """
         self.row = row
         self.col = col
         self.x = row * width
@@ -54,14 +67,13 @@ class Node:
     def __lt__(self, other):
         return False
 
+# Defining User Interface class to visualize the interactive grid.
 class UI:
     def __init__(self, width, height, grid_size=10):
         self.width = width
         self.height = height
         self.grid_size = grid_size
-        print(width)
-        print(height)
-        print(grid_size)
+        
         pygame.init()
 
         # Set time the screen updates (for FPS)

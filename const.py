@@ -2,8 +2,8 @@
 # User Interface configuration
 WIDTH = 600
 HEIGHT = 600
-GRID_SIZE = 30
-NO_OF_OBSTACLES = 35
+GRID_SIZE = 20
+NO_OF_OBSTACLES = 15
 FPS = 30
 
 

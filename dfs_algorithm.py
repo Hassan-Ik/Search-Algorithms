@@ -34,4 +34,4 @@ def depth_first_search(interface, start, goal, search_type = 'graph'):
         if current != start:
             interface.make_closed(current)  
 
-    return False, None
+    return None, None

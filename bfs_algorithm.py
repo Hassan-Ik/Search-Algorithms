@@ -3,6 +3,7 @@ from collections import deque
 def breath_first_search(interface, start, goal, search_type='graph'):
     queue = deque([start])
     came_from = {}
+    
     if search_type == 'tree':
         came_from = {start: None}
         
@@ -36,4 +37,4 @@ def breath_first_search(interface, start, goal, search_type='graph'):
             interface.make_closed(current)
 
     print("Length of Search:", len(came_from))
-    return False, None
+    return None, None

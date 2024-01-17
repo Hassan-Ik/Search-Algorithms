@@ -81,7 +81,7 @@ def main(width, height, grid_size, no_of_obstacles, start_node = None, goal_node
                     else:
                         raise Exception("Wrong Algorithm name")
                     
-                    if path is False:
+                    if path is None:
                         print("Unable to find path to the desired node.")
                     else:
                         print("Total Path from start node to goal node ", path)

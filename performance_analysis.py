@@ -36,8 +36,8 @@ if __name__ == '__main__':
     start_col = 14
     # start_row = np.random.randint(0, GRID_SIZE-1)
     # start_col = np.random.randint(0, GRID_SIZE-1)
-    goal_row = 18
-    goal_col = 26
+    goal_row = 2
+    goal_col = 1
     # goal_row = np.random.randint(0, GRID_SIZE-1)
     # goal_col = np.random.randint(0, GRID_SIZE-1)
     while start_row == goal_row and start_col == goal_col:
@@ -54,16 +54,15 @@ if __name__ == '__main__':
         row = random.randint(0, GRID_SIZE - 1) 
         col = random.randint(0, GRID_SIZE - 1)
         obstacles_combination.append((row, col))
-
-    algorithms_implementation_time = []
-    algorithms_implementation_storage_use = []
-    algorithms_implementation_cost = []
-    algorithms_implementation_path = []
-
     algorithms = ['BFS', 'DFS', 'A*', 'UCS']
     search_types = ['graph', 'tree']
     for search_type in search_types:
         logging.info(f"{search_type} search...")
+        algorithms_implementation_time = []
+        algorithms_implementation_storage_use = []
+        algorithms_implementation_cost = []
+        algorithms_implementation_path = []
+
         for algorithm in algorithms:
             interface = UI(WIDTH, HEIGHT, GRID_SIZE)
             grid = interface.make_grid(GRID_SIZE, WIDTH)
@@ -105,7 +104,7 @@ if __name__ == '__main__':
                     else:
                         raise Exception("Wrong Algorithm name")
                     
-                    if path is False:
+                    if path is None:
                         logging.info("Unable to find path to the desired node.")
                     else:
                         # logging.info("Total Path from start node to goal node ", path)

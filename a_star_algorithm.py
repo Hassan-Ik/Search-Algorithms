@@ -51,10 +51,9 @@ def astar_search(interface, grid, start, goal, search_type='graph'):
         if current == goal:
             path = []
             if search_type == 'tree' and current in came_from:
-                continue
-                # while current:
-                #      path.append(current)
-                #      current = came_from[current]
+                while current:
+                     path.append(current)
+                     current = came_from[current]
             else:
                 while current in came_from:
                     path.append(current)
@@ -85,4 +84,4 @@ def astar_search(interface, grid, start, goal, search_type='graph'):
         if current != start:
             interface.make_closed(current)
 
-    return False, None
+    return None, None

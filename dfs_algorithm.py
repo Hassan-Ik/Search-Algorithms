@@ -1,10 +1,10 @@
 from collections import deque
 
-def depth_first_search(interface, start, goal, type = 'graph'):
+def depth_first_search(interface, start, goal, search_type = 'graph'):
     stack = [start] 
     came_from = {}
     
-    if type == 'tree':
+    if search_type == 'tree':
         came_from = {start: None}
 
     while stack:
@@ -23,7 +23,7 @@ def depth_first_search(interface, start, goal, type = 'graph'):
             return path, cost
         
         for neighbor in current.neighbors:
-            if type == 'tree' and neighbor in came_from:
+            if search_type == 'tree' and neighbor in came_from:
                 continue
                 
             if neighbor not in came_from:

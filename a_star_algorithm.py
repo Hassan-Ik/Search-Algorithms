@@ -24,13 +24,12 @@ def manhattan_heuristics(p1, p2):
     return math.fabs(x1 - x2) + math.fabs(y1 - y2)
 
 
-def astar_search(interface, grid, start, goal, type='graph'):
-    count = 0
+def astar_search(interface, grid, start, goal, search_type='graph'):
     open_set = PriorityQueue()
-    open_set.put((0, count, start))
+    open_set.put((0, start))
 
     came_from = {}
-    if type == 'tree':
+    if search_type == 'tree':
         came_from = {start: None}
 
     g_score = {node: float("inf") for row in grid for node in row}
@@ -46,20 +45,21 @@ def astar_search(interface, grid, start, goal, type='graph'):
             if event.type == pygame.QUIT:
                 pygame.quit()
 
-        current = open_set.get()[2]
+        current = open_set.get()[1]
         open_set_hash.remove(current)
 
         if current == goal:
             path = []
-            if type == 'tree':
-                while current:
-                     path.append(current)
-                     current = came_from[current]
+            if search_type == 'tree' and current in came_from:
+                continue
+                # while current:
+                #      path.append(current)
+                #      current = came_from[current]
             else:
                 while current in came_from:
                     path.append(current)
                     current = came_from[current]
-            print(path)
+            
             path.reverse()
             for node in path:
                 interface.make_path(node)
@@ -69,7 +69,7 @@ def astar_search(interface, grid, start, goal, type='graph'):
             temp_g_score = g_score[current] + 1
 
             if temp_g_score < g_score[neighbor]:
-                if type == 'tree' and neighbor in came_from:
+                if search_type == 'tree' and neighbor in came_from:
                     continue
 
                 came_from[neighbor] = current
@@ -77,9 +77,8 @@ def astar_search(interface, grid, start, goal, type='graph'):
                 g_score[neighbor] = temp_g_score
                 f_score[neighbor] = temp_g_score + manhattan_heuristics(neighbor.get_pos(), goal.get_pos())
 
-                if neighbor not in open_set_hash:
-                    count += 1
-                    open_set.put((f_score[neighbor], count, neighbor))
+                if neighbor not in open_set_hash :
+                    open_set.put((f_score[neighbor], neighbor))
                     open_set_hash.add(neighbor)
                     interface.make_open(neighbor)
 

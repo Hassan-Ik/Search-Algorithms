@@ -1,13 +1,13 @@
 from queue import PriorityQueue
 
-def uniform_cost_search(interface, start, goal, type = 'graph'):
+def uniform_cost_search(interface, start, goal, search_type = 'graph'):
         queue = PriorityQueue()
         count = 0
         
         queue.put((0, count, start))
         came_from = {}
         
-        if type == 'tree':
+        if search_type == 'tree':
              came_from = {start: None}
 
         cost_so_far = {}
@@ -17,10 +17,11 @@ def uniform_cost_search(interface, start, goal, type = 'graph'):
             current = queue.get()[2]
             if current == goal:
                 path = []
-                if type == 'tree':
-                    while current:
-                        path.append(current)
-                        current = current.parent
+                if search_type == 'tree' and current in came_from:
+                    continue
+                    # while current:
+                    #     path.append(current)
+                    #     current = came_from[current]
                 else:
                     while current in came_from:
                         path.append(current)
@@ -37,7 +38,7 @@ def uniform_cost_search(interface, start, goal, type = 'graph'):
             for neighbor in current.neighbors:
                 new_cost = cost_so_far[current] + 1
                 
-                if type == 'tree' and neighbor in came_from:
+                if search_type == 'tree' and neighbor in came_from:
                      continue
                 
                 if neighbor not in cost_so_far or new_cost < cost_so_far[neighbor]:

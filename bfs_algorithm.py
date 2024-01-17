@@ -1,9 +1,9 @@
 from collections import deque
 
-def breath_first_search(interface, start, goal, type='graph'):
+def breath_first_search(interface, start, goal, search_type='graph'):
     queue = deque([start])
     came_from = {}
-    if type == 'tree':
+    if search_type == 'tree':
         came_from = {start: None}
         
     while queue:
@@ -24,7 +24,7 @@ def breath_first_search(interface, start, goal, type='graph'):
             return path, cost
         
         for neighbor in current.neighbors:
-            if type == 'tree' and neighbor in came_from:
+            if search_type == 'tree' and neighbor in came_from:
                 continue
             
             if neighbor not in came_from:

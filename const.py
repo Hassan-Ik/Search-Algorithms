@@ -32,4 +32,4 @@ DIRECTIONS = '4n'
 RADIUS = 1
 
 # Delay in visualization
-DELAY = 100
+DELAY = 10

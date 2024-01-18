@@ -54,7 +54,7 @@ if __name__ == '__main__':
         row = random.randint(0, GRID_SIZE - 1) 
         col = random.randint(0, GRID_SIZE - 1)
         obstacles_combination.append((row, col))
-    algorithms = ['BFS', 'DFS', 'A*', 'UCS']
+    algorithms = ['A*', 'BFS', 'DFS', 'UCS']
     search_types = ['graph', 'tree']
     for search_type in search_types:
         logging.info(f"{search_type} search...")

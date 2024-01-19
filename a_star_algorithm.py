@@ -1,7 +1,8 @@
 import pygame
 import math
+import heapq
 
-def eucliden_heuristics(p1, p2):
+def euclidean_heuristics(p1, p2):
     """
     Euclidean distance function for A* Search Algorithms
 
@@ -34,15 +35,14 @@ def astar_search(interface, grid, start, goal, search_type='graph'):
     f_score = {node: float("inf") for row in grid for node in row}
     f_score[start] = manhattan_heuristics(start.get_pos(), goal.get_pos())
 
-    open_set.append((f_score[start], start))
+    heapq.heappush(open_set, (f_score[start], start))
 
     while open_set:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
 
-        open_set.sort()
-        current_cost, current = open_set.pop(0) 
+        current_cost, current = heapq.heappop(open_set) 
         
         if current == goal:
             path = []
@@ -71,7 +71,7 @@ def astar_search(interface, grid, start, goal, search_type='graph'):
 
                 f_score[neighbor] = temp_g_score
                 if neighbor not in closed_set:
-                    open_set.append((f_score[neighbor], neighbor))
+                    heapq.heappush(open_set, (f_score[neighbor], neighbor))
                     interface.make_open(neighbor)
 
         if current != start:
